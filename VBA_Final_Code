@@ -1,4 +1,6 @@
-Sub stockloop():
+Sub forEachWs()
+    Dim ws As Worksheet
+    For Each ws In ActiveWorkbook.Worksheets
     Dim input_row As Long
     Dim current_ticker
     Dim next_ticker
@@ -13,74 +15,76 @@ Sub stockloop():
     Dim Percent As Single
     Dim last_data_row As Long
     
-    Range("i1").Value = "Ticker Symbol"
-    Range("j1").Value = "Yearly Change$"
-    Range("k1").Value = "Percentage Change"
-    Range("l1").Value = "Total Stock Volume"
-    Range("p1").Value = "Ticker"
-    Range("q1").Value = "Value"
-    Range("o2").Value = "Greatest % Increase"
-    Range("o3").Value = "Greatest % Decrease"
-    Range("o4").Value = "Greatest Total Volume"
+    ws.Range("i1").Value = "Ticker Symbol"
+    ws.Range("j1").Value = "Yearly Change$"
+    ws.Range("k1").Value = "Percentage Change"
+    ws.Range("l1").Value = "Total Stock Volume"
+    ws.Range("p1").Value = "Ticker"
+    ws.Range("q1").Value = "Value"
+    ws.Range("o2").Value = "Greatest % Increase"
+    ws.Range("o3").Value = "Greatest % Decrease"
+    ws.Range("o4").Value = "Greatest Total Volume"
     
     
-    Columns.AutoFit
+    ws.Columns.AutoFit
     
     si = 2
     Total = 0
-    first_open = Cells(2, "C")
+    first_open = ws.Cells(2, "C")
     Change = 0
     Percent = 0
     
-    last_data_row = Cells(Rows.Count, "A").End(xlUp).Row
+    last_data_row = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
     
     For i = 2 To last_data_row
-        Total = Total + Cells(i, "G")
+        Total = Total + ws.Cells(i, "G")
         
         'End Ticker Year'
         
-        If Cells(i, "A") <> Cells(i + 1, "A") Then
-            Cells(si, "i") = Cells(i, "A")
-            Cells(si, "l") = Total
+        If ws.Cells(i, "A") <> ws.Cells(i + 1, "A") Then
+            ws.Cells(si, "i") = ws.Cells(i, "A")
+            ws.Cells(si, "l") = Total
             
-            Change = Cells(i, "F") - first_open
-            Cells(si, "J") = Change
+            Change = ws.Cells(i, "F") - first_open
+            ws.Cells(si, "J") = Change
+            ws.Cells(si, "J").NumberFormat = "0.00"
             Percent = Change / first_open
-            Cells(si, "K") = Percent
-            Cells(si, "K").NumberFormat = "0.00%"
+            ws.Cells(si, "K") = Percent
+            ws.Cells(si, "K").NumberFormat = "0.00%"
             
-            Range("q2") = "%" & WorksheetFunction.Max(Range("K2:K" & last_data_row)) * 100
-            Range("q3") = "%" & WorksheetFunction.Min(Range("K2:K" & last_data_row)) * 100
-            Range("q4") = WorksheetFunction.Max(Range("L2:L" & last_data_row))
+            ws.Range("q2") = "%" & WorksheetFunction.Max(ws.Range("K2:K" & last_data_row)) * 100
+            ws.Range("q3") = "%" & WorksheetFunction.Min(ws.Range("K2:K" & last_data_row)) * 100
+            ws.Range("q4") = WorksheetFunction.Max(ws.Range("L2:L" & last_data_row))
             
-            ticker_value1 = WorksheetFunction.Max(Range("K2:K" & last_data_row))
-            Range("p2").Value = ticker_value1
-            located_ticker = WorksheetFunction.Match(ticker_value1, Range("K1:K" & last_data_row), 0)
-            Range("p2").Value = Cells(located_ticker, 9).Value
+            ticker_value1 = WorksheetFunction.Max(ws.Range("K2:K" & last_data_row))
+            ws.Range("p2").Value = ticker_value1
+            located_ticker = WorksheetFunction.Match(ticker_value1, ws.Range("K1:K" & last_data_row), 0)
+            ws.Range("p2").Value = ws.Cells(located_ticker, 9).Value
             
-            ticker_value2 = WorksheetFunction.Min(Range("K2:K" & last_data_row))
-            Range("p3").Value = ticker_value2
-            located_ticker2 = WorksheetFunction.Match(ticker_value2, Range("K1:K" & last_data_row), 0)
-             Range("p3").Value = Cells(located_ticker2, 9).Value
+            ticker_value2 = WorksheetFunction.Min(ws.Range("K2:K" & last_data_row))
+            ws.Range("p3").Value = ticker_value2
+            located_ticker2 = WorksheetFunction.Match(ticker_value2, ws.Range("K1:K" & last_data_row), 0)
+            ws.Range("p3").Value = ws.Cells(located_ticker2, 9).Value
             
-            ticker_value3 = WorksheetFunction.Max(Range("L2:L" & last_data_row))
-            Range("p4").Value = ticker_value3
-            located_ticker3 = WorksheetFunction.Match(ticker_value3, Range("L1:L" & last_data_row), 0)
-            Range("p4").Value = Cells(located_ticker3, 9).Value
+            ticker_value3 = WorksheetFunction.Max(ws.Range("L2:L" & last_data_row))
+            ws.Range("p4").Value = ticker_value3
+            located_ticker3 = WorksheetFunction.Match(ticker_value3, ws.Range("L1:L" & last_data_row), 0)
+            ws.Range("p4").Value = ws.Cells(located_ticker3, 9).Value
             
             If Change > 0 Then
-                Cells(si, "J").Interior.ColorIndex = 4
+                ws.Cells(si, "J").Interior.ColorIndex = 4
             Else
-                Cells(si, "J").Interior.ColorIndex = 3
+                ws.Cells(si, "J").Interior.ColorIndex = 3
             
         
             End If
-            first_open = Cells(i + 1, "C")
+            first_open = ws.Cells(i + 1, "C")
             Total = 0
             'reset area
             si = si + 1
             
         End If
         
-    Next i
-End Sub
+        Next i
+        Next
+            End Sub
